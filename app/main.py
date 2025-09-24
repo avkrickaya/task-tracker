@@ -1,11 +1,13 @@
+# точка входа приложения
 from fastapi import FastAPI
-from pydantic import BaseModel
-from app.routes import habits, tasks
+from app.database import Base, engine
+from app.routes import task
 
-# Создание приложения
-app = FastAPI()
+# создание таблиц, если их еще нет
+Base.metadata.create_all(bind=engine)
 
-# Регистрируем роутеры
-app.include_router(tasks.router)
-app.include_router(habits.router)
+# создание FastAPI-приложение
+app = FastAPI(title="Task Tracker")
 
+# подключение роуты
+app.include_router(task.router)
