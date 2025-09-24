@@ -1,14 +1,11 @@
 from fastapi import FastAPI
+from pydantic import BaseModel
+from app.routes import habits, tasks
 
 # Создание приложения
 app = FastAPI()
 
-# Простой маршрут (endpoint)
-@app.get("/")
-def read_root():
-    return {"message": "Task Tracker работает!"}
+# Регистрируем роутеры
+app.include_router(tasks.router)
+app.include_router(habits.router)
 
-# Маршрут для проверки, что сервер живой
-@app.get("/ping")
-def ping():
-    return {"status": "ok"}
