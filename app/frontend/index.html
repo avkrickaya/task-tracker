@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Task Tracker – Задачи</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Мои задачи</h1>
+        <nav>
+            <a href="index.html">Задачи</a>
+            <a href="habits.html">Привычки</a>
+            <a href="analytics.html">Аналитика</a>
+        </nav>
+    </header>
+
+    <main>
+        <section id="task-form">
+            <h2>Добавить задачу</h2>
+            <input type="text" id="task-title" placeholder="Название задачи">
+            <select id="task-priority">
+                <option value="low">Низкий</option>
+                <option value="medium" selected>Средний</option>
+                <option value="high">Высокий</option>
+            </select>
+            <button onclick="addTask()">Добавить</button>
+        </section>
+
+        <section id="task-list">
+            <h2>Список задач</h2>
+            <ul id="tasks"></ul>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Task Tracker – Привычки</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Трекер привычек</h1>
+        <nav>
+            <a href="index.html">Задачи</a>
+            <a href="habits.html">Привычки</a>
+            <a href="analytics.html">Аналитика</a>
+        </nav>
+    </header>
+
+    <main>
+        <section id="habit-form">
+            <h2>Добавить привычку</h2>
+            <input type="text" id="habit-title" placeholder="Название привычки">
+            <button onclick="addHabit()">Добавить</button>
+        </section>
+
+        <section id="habit-list">
+            <h2>Мои привычки</h2>
+            <ul id="habits"></ul>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
