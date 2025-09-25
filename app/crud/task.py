@@ -1,20 +1,36 @@
-# функция для работы с задачами (CRUD)
+# app/crud/task.py
+# CRUD для задач
+
 from sqlalchemy.orm import Session
 from app.models.task import Task
 from app.schemas.task import TaskCreate
 
-# получить все задачи
 def get_tasks(db: Session):
+    """Вернуть все задачи."""
     return db.query(Task).all()
 
-# получить задачу по id
 def get_task(db: Session, task_id: int):
-    return db.query(Task). filter(Task.id == task_id).first()
+    """Вернуть задачу по ID (или None)."""
+    return db.query(Task).filter(Task.id == task_id).first()
 
-# создать задачу
-def create_task(db: Session, task: TaskCreate):
-    db_task = task(**task.dict()) # распаковка dict из Pydantic-модели
-    db.add(db_task)
-    db.commit()
-    db.refresh(db_task) # обновление объекта (чтобы был id)
+def create_task(db: Session, task_in: TaskCreate):
+    """Создать задачу из Pydantic-модели TaskCreate."""
+    db_task = Task(**task_in.dict())  # распаковка словаря в конструктор модели
+    db.add(db_task)                  # добавляем в сессию
+    db.commit()                      # коммитим (сохраняем)
+    db.refresh(db_task)              # обновляем объект (чтобы получить id и т.д.)
     return db_task
+
+def update_task(db: Session, db_task: Task, updates: dict):
+    """Частичное обновление: передаём существующий объект и dict с изменениями."""
+    for key, value in updates.items():
+        setattr(db_task, key, value)
+    db.commit()
+    db.refresh(db_task)
+    return db_task
+
+def delete_task(db: Session, db_task: Task):
+    """Удалить задачу из базы."""
+    db.delete(db_task)
+    db.commit()
+    return

@@ -1,10 +1,12 @@
-# Pydantic-модели для валидации запросов/ответов
-from pydantic import BaseModel
-from datetime import datetime
-from typing import Optional
-from app.models.task import TaskPriority, TaskStatus
+# app/schemas/task.py
+# Схемы для задач
 
-# базовая схема задачи (чтение + запись)
+from pydantic import BaseModel
+from typing import Optional
+from datetime import datetime
+from app.models.task import TaskPriority, TaskStatus  # импорт Enum-типов из модели
+
+# Базовая схема — поля, которые используются при создании/обновлении
 class TaskBase(BaseModel):
     title: str
     description: Optional[str] = None
@@ -12,15 +14,17 @@ class TaskBase(BaseModel):
     status: TaskStatus = TaskStatus.todo
     start_date: Optional[datetime] = None
     due_date: Optional[datetime] = None
+    sprint_id: Optional[int] = None
+    category_id: Optional[int] = None
 
-# для создания задачи (нет id)
+# Схема для создания — пока просто TaskBase
 class TaskCreate(TaskBase):
-    pass 
+    pass
 
-# для возврата клиенту (id добавлен)
+# Схема для ответа клиенту — добавляем id и created_at
 class TaskOut(TaskBase):
     id: int
     created_at: datetime
 
     class Config:
-        orm_mode = True # нужно, чтобы Pydantic  мог работать с ORM объектами
+        orm_mode = True  # позволяет возвращать ORM-объекты напрямую

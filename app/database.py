@@ -1,27 +1,26 @@
-# Отвечает за подключение к базе данных и создание сессий
-from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base #базовый класс моделей
-from sqlalchemy.orm import sessionmaker # фабрика сесий
+# Настройка подключения к базе данных и зависимость get_db для FastAPI
 
-# URL базы данных. Для SQLite можно просто указать путь к файлу
+from sqlalchemy import create_engine  # движок для подключения к БД
+from sqlalchemy.orm import sessionmaker, declarative_base  # фабрика сессий и базовый класс для моделей
+
+# URL подключения к SQLite — файл task_tracker.db в корне проекта
 SQLALCHEMY_DATABASE_URL = "sqlite:///./task_tracker.db"
 
-# Создаем движок (engine) - объект, который управляет соединением с БД
+# Создаём движок SQLAlchemy; для SQLite нужно передать check_same_thread=False
 engine = create_engine(
-    SQLALCHEMY_DATABASE_URL,
-    connect_args={"check_same_thread": False} # нужно только для SQLite
+    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
 )
 
-# Создаем "фабрику" сессий - объект, который будет выдавать соединения
+# Создаём фабрику сессий; SessionLocal() будет выдавать объект сессии
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-# Базовый класс для моделей (все модели будут от него наследоваться)
+# Базовый класс, от которого будут наследоваться модели SQLAlchemy
 Base = declarative_base()
 
-# Функция-зависимость для FastAPI - возвращает сессию, закрывается после запроса
+# Dependency для FastAPI — используем в маршрутах, чтобы получить сессию БД
 def get_db():
-    db = SessionLocal()
+    db = SessionLocal()     # создаём сессию
     try:
-        yield db
+        yield db            # возвращаем её вызывающему коду (в эндпоинте)
     finally:
-        db.close()
+        db.close()          # закрываем сессию после обработки запроса
